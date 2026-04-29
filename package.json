@@ -1,0 +1,27 @@
+{
+  "name": "aura-monorepo",
+  "private": true,
+  "scripts": {
+    "start:dev": "turbo dev",
+    "start:build": "turbo build",
+    "start:lint": "turbo lint",
+    "db:push": "turbo db:push --filter=@aura/db",
+    "db:generate": "turbo db:generate --filter=@aura/db",
+    "worker": "turbo worker --filter=@aura/worker"
+  },
+  "devDependencies": {
+    "turbo": "latest"
+  },
+  "packageManager": "pnpm@10.26.2",
+  "dependencies": {
+    "@prisma/client": "6.4.1",
+    "prisma": "6.4.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "prisma",
+      "@prisma/client",
+      "@prisma/engines"
+    ]
+  }
+}

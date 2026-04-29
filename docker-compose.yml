@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # The Web Frontend (@aura/web)
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://leetcode:leetcode@db:5432/leetcode?schema=public
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - db
+      - redis
+    restart: always
+
+  # The Background Judge (@aura/worker)
+  worker:
+    build:
+      context: .
+      dockerfile: apps/judge-worker/Dockerfile
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./temp:/app/temp
+    environment:
+      - DATABASE_URL=postgresql://leetcode:leetcode@db:5432/leetcode?schema=public
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - db
+      - redis
+    restart: always
+
+  # Redis for Queueing
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    restart: always
+
+  # PostgreSQL for Submissions & Problems
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=leetcode
+      - POSTGRES_PASSWORD=leetcode
+      - POSTGRES_DB=leetcode
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: always
+
+volumes:
+  pgdata:
