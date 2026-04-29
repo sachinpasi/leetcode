@@ -16,6 +16,6 @@
     "typescript": "^5.3.0"
   },
   "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "seed": "pnpm exec tsx prisma/seed.ts"
   }
 }
